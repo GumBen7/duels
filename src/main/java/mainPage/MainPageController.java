@@ -1,9 +1,5 @@
 package mainPage;
 
-import databases.Database;
-import databases.DatabaseFactory;
-import databases.DatabaseType;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,8 +15,6 @@ public class MainPageController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        RequestModel requestModel = RequestModel.fromRequestParameters(req);
-//        requestModel.setAsRequestAttributes(req);
         mainPageModel = new MainPageModel(req.getParameter("login"), req.getParameter("password"));
         boolean isThereViolation = mainPageModel.validate();
         if (!isThereViolation) {
@@ -46,25 +40,4 @@ public class MainPageController extends HttpServlet {
             e.printStackTrace();
         }
     }
-
-    /*private class RequestModel {
-        private final String login;
-        private final String password;
-
-        private RequestModel(String login, String password) {
-            this.login = login;
-            this.password = password;
-        }
-
-//        public static RequestModel fromRequestParameters(HttpServletRequest req) {
-//            return new RequestModel(req.getParameter("login"), req.getParameter("password"));
-//        }
-
-        public void setAsRequestAttributes(HttpServletRequest req) {
-            req.setAttribute("login", login);
-            req.setAttribute("password", password);
-        }
-
-
-    }*/
 }

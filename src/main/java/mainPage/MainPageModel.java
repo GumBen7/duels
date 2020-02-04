@@ -13,6 +13,7 @@ public class MainPageModel {
         this.password = password;
     }
 
+    //region getters/setters
     public String getLogin() {
         return login;
     }
@@ -28,21 +29,22 @@ public class MainPageModel {
     public void setPassword(String password) {
         this.password = password;
     }
+    //endregion
 
     /**
      * checks authorization info in db
+     * creates new player if such doesn't exist
      * @return false if there is any violation, true if not
      */
     public boolean validate() {
         DatabaseFactory databaseFactory = DatabaseFactory.factory(DatabaseType.MYSQL);
         Database database = databaseFactory.getDatabase();
-        boolean result = true;
         boolean isRegistered = database.isRegistered(this);
         if (isRegistered) {
-            result = database.attemptToAuthorize(this);
+            return database.attemptToAuthorize(this);
         } else {
             database.signUpNewPlayer(this);
+            return true;
         }
-        return result;
     }
 }

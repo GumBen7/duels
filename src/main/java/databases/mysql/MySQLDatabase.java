@@ -6,10 +6,7 @@ import mainPage.MainPageModel;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,10 +16,6 @@ public class MySQLDatabase extends Database {
     private final static String PROPS_KEY_URL = "mysql.url";
     private final static String PROPS_KEY_USERNAME = "mysql.username";
     private final static String PROPS_KEY_PASSWORD = "mysql.password";
-
-    //region prepared queries
-//    private final static String AUTHORIZATION_Q = "SELECT EXISTS (SELECT * FROM user_md5 WHERE ?) ";
-    //endregion
 
     private static MySQLDatabase mySqlDatabase = null;
     private MysqlDataSource ds;
@@ -48,12 +41,18 @@ public class MySQLDatabase extends Database {
         return mySqlDatabase;
     }
 
+    //region parent
     @Override
     public boolean isRegistered(MainPageModel mainPageModel) {
         String isRegisteredQuery = "SELECT EXISTS (SELECT * FROM duels.user_md5 WHERE user_name='" + mainPageModel.getLogin() + "')";
         try (Connection conn = ds.getConnection();
-             PreparedStatement pst = conn.prepareStatement(isRegisteredQuery)) {
-            return pst.execute();
+             PreparedStatement pst = conn.prepareStatement(isRegisteredQuery);
+             ResultSet rs = pst.executeQuery()) {
+            boolean result = false;
+            if (rs.next()) {
+                result = rs.getString(1).equals("1");
+            }
+            return result;
         } catch (SQLException e) {
             Logger lgr = Logger.getLogger(MySQLDatabase.class.getName());
             lgr.log(Level.SEVERE, e.getMessage(), e);
@@ -67,8 +66,13 @@ public class MySQLDatabase extends Database {
                 "WHERE user_name='" + mainPageModel.getLogin() +
                 "' AND password=MD5('" + mainPageModel.getPassword() + "'))";
         try (Connection conn = ds.getConnection();
-             PreparedStatement pst = conn.prepareStatement(authorizeQuery)) {
-            return pst.execute();
+             PreparedStatement pst = conn.prepareStatement(authorizeQuery);
+             ResultSet rs = pst.executeQuery()) {
+            boolean result = false;
+            if (rs.next()) {
+                result = rs.getString(1).equals("1");
+            }
+            return result;
         } catch (SQLException e) {
             Logger lgr = Logger.getLogger(MySQLDatabase.class.getName());
             lgr.log(Level.SEVERE, e.getMessage(), e);
@@ -99,4 +103,5 @@ public class MySQLDatabase extends Database {
             lgr.log(Level.SEVERE, e.getMessage(), e);
         }
     }
+    //endregion
 }

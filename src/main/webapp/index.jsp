@@ -8,7 +8,7 @@
 <h1>Welcome to Duels!</h1>
 <h2>Please put LOGIN and PASSWORD to play</h2>
 <c:if test="${violation != null}">
-    <p>violation</p>
+    <p>${violation}</p>
 </c:if>
 <form action="${pageContext.request.contextPath}/main" method="post">
     <label for="login">LOGIN: </label>
