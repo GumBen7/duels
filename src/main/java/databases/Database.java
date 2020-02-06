@@ -1,11 +1,16 @@
 package databases;
 
-import mainPage.MainPageModel;
+import databases.entities.PlayersData;
 
 public abstract class Database {
-    public abstract boolean isRegistered(MainPageModel mainPageModel);
+    //region accounts
+    public abstract boolean isRegistered(String login);
 
-    public abstract boolean attemptToAuthorize(MainPageModel mainPageModel);
+    public abstract boolean attemptToAuthorize(String login, String password);
 
-    public abstract void signUpNewPlayer(MainPageModel mainPageModel);
+    public abstract void signUpNewPlayer(String login, String password);
+    //endregion
+    //region players data
+    public abstract PlayersData getPlayersData(String login);
+    //endregion
 }

@@ -1,4 +1,4 @@
-import mainPage.MainPageController;
+package mainPage.battlePage;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,19 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "IndexPageController")
-public class IndexPageController extends HttpServlet {
-    private MainPageController mainPageController;
-
-    @Override
-    public void init() throws ServletException {
-        mainPageController = new MainPageController();
-        super.init();
-    }
-
+@WebServlet(name = "DuelPageController", urlPatterns = "/duel")
+public class DuelPageController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String url ="/WEB-INF/index.jsp";
+        String url ="/WEB-INF/views/duel.jsp";
         forwardResponse(url, req, resp);
     }
 

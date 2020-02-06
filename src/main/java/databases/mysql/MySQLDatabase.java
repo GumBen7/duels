@@ -2,7 +2,7 @@ package databases.mysql;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import databases.Database;
-import mainPage.MainPageModel;
+import databases.entities.PlayersData;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,6 +10,8 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static mainPage.playersPool.player.PlayerModel.*;
 
 public class MySQLDatabase extends Database {
     private final static String PROPS_FILE_NAME = "db.properties";
@@ -42,9 +44,10 @@ public class MySQLDatabase extends Database {
     }
 
     //region parent
+    //region accounts
     @Override
-    public boolean isRegistered(MainPageModel mainPageModel) {
-        String isRegisteredQuery = "SELECT EXISTS (SELECT * FROM duels.user_md5 WHERE user_name='" + mainPageModel.getLogin() + "')";
+    public boolean isRegistered(String login) {
+        String isRegisteredQuery = "SELECT EXISTS (SELECT * FROM duels.user_md5 WHERE user_name='" + login + "')";
         try (Connection conn = ds.getConnection();
              PreparedStatement pst = conn.prepareStatement(isRegisteredQuery);
              ResultSet rs = pst.executeQuery()) {
@@ -61,10 +64,10 @@ public class MySQLDatabase extends Database {
     }
 
     @Override
-    public boolean attemptToAuthorize(MainPageModel mainPageModel) {
+    public boolean attemptToAuthorize(String login, String password) {
         String authorizeQuery = "SELECT EXISTS (SELECT * FROM duels.user_md5 " +
-                "WHERE user_name='" + mainPageModel.getLogin() +
-                "' AND password=MD5('" + mainPageModel.getPassword() + "'))";
+                "WHERE user_name='" + login +
+                "' AND password=MD5('" + password + "'))";
         try (Connection conn = ds.getConnection();
              PreparedStatement pst = conn.prepareStatement(authorizeQuery);
              ResultSet rs = pst.executeQuery()) {
@@ -81,12 +84,15 @@ public class MySQLDatabase extends Database {
     }
 
     @Override
-    public void signUpNewPlayer(MainPageModel mainPageModel) {
-        String signUpQuery = "INSERT INTO duels.user_md5 VALUES ('" + mainPageModel.getLogin() + "', MD5('" + mainPageModel.getPassword() + "'))";
+    public void signUpNewPlayer(String login, String password) {
+        String signUpQuery = "INSERT INTO duels.user_md5 VALUES ('" + login + "', MD5('" + password + "'))";
+        String createNewDataQuery = "INSERT INTO duels.user_data VALUES ('" + login + "', " + NEW_BORN_ATTACK + ", " + NEW_BORN_STAMINA + ", " + NEW_BORN_RATING + ")";
         try (Connection conn = ds.getConnection()) {
-            try (Statement st = conn.createStatement()) {
+            try (Statement st = conn.createStatement();
+                 Statement st2 = conn.createStatement()) {
                 conn.setAutoCommit(false);
                 st.executeUpdate(signUpQuery);
+                st2.executeUpdate(createNewDataQuery);
                 conn.commit();
             } catch (SQLException e) {
                 try {
@@ -98,10 +104,31 @@ public class MySQLDatabase extends Database {
                 Logger lgr = Logger.getLogger(MySQLDatabase.class.getName());
                 lgr.log(Level.SEVERE, e.getMessage(), e);
             }
+
         } catch (SQLException e) {
             Logger lgr = Logger.getLogger(MySQLDatabase.class.getName());
             lgr.log(Level.SEVERE, e.getMessage(), e);
         }
     }
+    //endregion
+    //region players data
+    public PlayersData getPlayersData(String login) {
+        PlayersData playersData = new PlayersData();
+        String getDataQuery = "SELECT attack, stamina, rating FROM duels.user_data";
+        try (Connection conn = ds.getConnection();
+             PreparedStatement pst = conn.prepareStatement(getDataQuery);
+             ResultSet rs = pst.executeQuery()) {
+            if (rs.next()) {
+                playersData.setAttack(rs.getInt(1));
+                playersData.setAttack(rs.getInt(2));
+                playersData.setAttack(rs.getInt(3));
+            }
+        } catch (SQLException e) {
+            Logger lgr = Logger.getLogger(MySQLDatabase.class.getName());
+            lgr.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return playersData;
+    }
+    //endregion
     //endregion
 }

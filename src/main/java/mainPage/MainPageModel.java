@@ -5,10 +5,12 @@ import databases.DatabaseFactory;
 import databases.DatabaseType;
 
 public class MainPageModel {
+    private MainPageController controller;
     private String login;
     private String password;
 
-    public MainPageModel(String login, String password) {
+    public MainPageModel(String login, String password, MainPageController controller) {
+        this.controller = controller;
         this.login = login;
         this.password = password;
     }
@@ -39,11 +41,16 @@ public class MainPageModel {
     public boolean validate() {
         DatabaseFactory databaseFactory = DatabaseFactory.factory(DatabaseType.MYSQL);
         Database database = databaseFactory.getDatabase();
-        boolean isRegistered = database.isRegistered(this);
+        boolean isRegistered = database.isRegistered(login);
         if (isRegistered) {
-            return database.attemptToAuthorize(this);
+            boolean isSuccessful = database.attemptToAuthorize(login, password);
+            if (isSuccessful) {
+                controller.logInPlayer(login, false);
+            }
+            return isSuccessful;
         } else {
-            database.signUpNewPlayer(this);
+            controller.logInPlayer(login, true); //TODO better behaviour in multiple login
+            database.signUpNewPlayer(login, password);
             return true;
         }
     }
