@@ -15,6 +15,7 @@ public class PlayerController {
         playerModel.setSpawnHp();
     }
 
+    //TODO use!!!!!!
     public boolean takeDamage(int d) {
         return playerModel.damage(d);
     }

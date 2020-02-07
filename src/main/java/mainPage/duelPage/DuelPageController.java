@@ -26,10 +26,10 @@ public class DuelPageController extends HttpServlet {
             req.setAttribute("rating", playerModel.getRating());
         } else {
             GameController gameController = MainPageController.createGame(login);
-            if (gameController != null) {
+            if (gameController != null) { //TODO time out !!!!!!!
                 gameController.duel();
                 req.setAttribute("duel", "duel");
-                PlayerController client = gameController.getClientPlayer(login);
+                PlayerController client = gameController.getClientPlayer(login); //TODO show battle!!!! BATTLE MECHANICS  !!!!!!!
                 PlayerController enemy = gameController.getEnemyPlayer(login);
             } else {
                 req.setAttribute("pending", "pending");

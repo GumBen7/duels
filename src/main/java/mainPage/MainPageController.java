@@ -58,6 +58,7 @@ public class MainPageController extends HttpServlet {
     //endregion
     //endregion
 
+    //TODO quiting and data saving!!!!!!!!
     public PlayerModel logInPlayer(String login, boolean isNewPlayer) {
         return playersPoolController.add(login, isNewPlayer);
     }

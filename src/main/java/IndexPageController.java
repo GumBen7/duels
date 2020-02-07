@@ -14,6 +14,7 @@ public class IndexPageController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String url ="/WEB-INF/index.jsp";
         forwardResponse(url, req, resp);
+        //TODO tech info about every page !!!!!
     }
 
     private void forwardResponse(String url, HttpServletRequest req, HttpServletResponse resp) {

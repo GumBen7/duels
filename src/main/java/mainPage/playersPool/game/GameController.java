@@ -41,7 +41,7 @@ public class GameController {
         return player1;
     }
 
-    public PlayerController duel() {
+    public PlayerController duel() { //TODO rating refreshing logic !
         player1.setSpawnHp();
         player2.setSpawnHp();
         TimerTask task = new TimerTask() {
