@@ -1,9 +1,12 @@
 package mainPage.playersPool;
 
+import mainPage.playersPool.game.GameModel;
 import mainPage.playersPool.player.PlayerModel;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 public class PlayersPoolModel {
     private Map<String, PlayerModel> players;
@@ -20,4 +23,9 @@ public class PlayersPoolModel {
     public PlayerModel add(String login, boolean isNewPlayer) {
         return players.put(login, new PlayerModel(login, isNewPlayer));
     }
+
+    public PlayerModel get(String login) {
+        return players.get(login);
+    }
+
 }

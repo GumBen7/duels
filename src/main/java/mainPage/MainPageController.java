@@ -1,6 +1,8 @@
 package mainPage;
 
 import mainPage.playersPool.PlayersPoolController;
+import mainPage.playersPool.game.GameController;
+import mainPage.playersPool.game.GameModel;
 import mainPage.playersPool.player.PlayerModel;
 
 import javax.servlet.ServletException;
@@ -14,18 +16,17 @@ import java.io.IOException;
 public class MainPageController extends HttpServlet {
     private final static String WRONG_PASSWORD_MESSAGE = "Wrong password";
     private final static String VIOLATION_PARAMETER_NAME = "violation";
-    private PlayersPoolController playersPoolController;
+    private static PlayersPoolController playersPoolController;
 
     public MainPageController() {
         playersPoolController = new PlayersPoolController();
     }
 
     //region servlet
-//    @Override
-//    public void init() throws ServletException {
-//        playersPoolController = new PlayersPoolController();
-//        super.init();
-//    }
+    @Override
+    public void init() throws ServletException {
+        super.init();
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,8 +34,8 @@ public class MainPageController extends HttpServlet {
         boolean isThereViolation = mainPageModel.validate();
         if (!isThereViolation) {
             req.setAttribute(VIOLATION_PARAMETER_NAME, WRONG_PASSWORD_MESSAGE);
-        } else {
         }
+        req.setAttribute("login", mainPageModel.getLogin());
         String url = determineUrl(isThereViolation);
         forwardResponse(url, req, resp);
     }
@@ -61,5 +62,12 @@ public class MainPageController extends HttpServlet {
         return playersPoolController.add(login, isNewPlayer);
     }
 
-//    public void logOutPlayer()
+    public static PlayersPoolController getPlayersPoolController() {
+        return playersPoolController;
+    }
+
+    public static GameController createGame(String login) {
+        System.out.println(login);
+        return playersPoolController.createGame(login);
+    }
 }

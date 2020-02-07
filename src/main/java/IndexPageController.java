@@ -9,13 +9,6 @@ import java.io.IOException;
 
 @WebServlet(name = "IndexPageController")
 public class IndexPageController extends HttpServlet {
-    private MainPageController mainPageController;
-
-    @Override
-    public void init() throws ServletException {
-        mainPageController = new MainPageController();
-        super.init();
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

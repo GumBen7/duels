@@ -1,11 +1,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Duels</title>
+    <title>Main</title>
 </head>
 <body>
-<h1>Thanks for signing up with us!</h1>
+<h1>Hi, ${login}</h1>
 <form action="${pageContext.request.contextPath}/duel" method="post">
+    <input type="hidden" name="login" value="${login}">
     <input type="submit" name="duel" value="Duels">
 </form>
 <form action="${pageContext.request.contextPath}/" method="post">
