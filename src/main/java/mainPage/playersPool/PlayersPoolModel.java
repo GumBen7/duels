@@ -18,10 +18,11 @@ public class PlayersPoolModel {
     /** attempts to add new online player
      *
      * @param login - player's unique login
-     * @return true if successful, false if not; TODO better behaviour in multiple login
+     * @return new model if successful, null if not; TODO better behaviour in multiple login
      */
     public PlayerModel add(String login, boolean isNewPlayer) {
-        return players.put(login, new PlayerModel(login, isNewPlayer));
+        players.put(login, new PlayerModel(login, isNewPlayer));
+        return players.get(login);
     }
 
     public PlayerModel get(String login) {

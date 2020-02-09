@@ -68,7 +68,7 @@ public class MainPageController extends HttpServlet {
     }
 
     public static GameController createGame(String login) {
-        System.out.println(login);
+        System.out.println(login); //FIXME delete
         return playersPoolController.createGame(login);
     }
 }
