@@ -21,6 +21,10 @@ public class GameController {
         return gameModel.isReady();
     }
 
+    /**
+     * add to a game player2 and set it ready
+     * @param player2 PlayerController
+     */
     public void setPlayer2IntoGame(PlayerController player2) {
         this.player2 = player2;
         gameModel.setPlayer2(player2.getPlayerModel());
@@ -60,5 +64,9 @@ public class GameController {
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(task, 0, 1*1000);
         return winner;
+    }
+
+    public boolean isPlayer1Game(String login) {
+        return player1.getPlayerModel().getLogin().equals(login);
     }
 }

@@ -33,6 +33,10 @@ public class DuelPageController extends HttpServlet {
                 PlayerController enemy = gameController.getEnemyPlayer(login);
             } else {
                 req.setAttribute("pending", "pending");
+                while (MainPageController.getPlayersPoolController().isPlayerPending(login)) {
+                    forwardResponse(url, req, resp);
+                }
+                req.setAttribute("duel", "duel");
             }
         }
         forwardResponse(url, req, resp);

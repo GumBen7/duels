@@ -31,25 +31,38 @@ public class PlayersPoolController {
     }
 
     public GameController createGame(String login) {
-        if (!isPlayerAlreadyPending(login)) {
+        if (!isPlayerPending(login)) {
             pendingPlayers.add(login);
-            if (gamesControllers.isEmpty() || gamesControllers.element().isGameReady()) {
+            if (gamesControllers.isEmpty()) {
                 GameModel gameModel = new GameModel(playersPoolModel.get(login));
                 gamesControllers.add(new GameController(gameModel, playersControllers.get(login)));
                 return null;
             } else {
                 GameController gameController = gamesControllers.element();
-                gameController.setPlayer2IntoGame(playersControllers.get(login));
-                pendingPlayers.remove(gameController.getClientPlayer(login).getPlayerModel().getLogin());
-                pendingPlayers.remove(gameController.getEnemyPlayer(login).getPlayerModel().getLogin());
-                return gamesControllers.remove();
+                if (!gameController.isGameReady()) {
+                    gameController.setPlayer2IntoGame(playersControllers.get(login));
+                    return gameController;
+                } else {
+                    pendingPlayers.remove(gameController.getClientPlayer(login).getPlayerModel().getLogin());
+                    pendingPlayers.remove(gameController.getEnemyPlayer(login).getPlayerModel().getLogin());
+                    return gamesControllers.remove();
+                }
             }
         } else {
             return null;
         }
     }
 
-    private boolean isPlayerAlreadyPending(String login) {
+    public boolean isPlayerPending(String login) {
         return pendingPlayers.contains(login);
+    }
+
+    public GameController getPlayerGame(String login) {
+        for (GameController game : gamesControllers) {
+            if (game.isPlayer1Game(login)) {
+                return game;
+            }
+        }
+        return null;
     }
 }
